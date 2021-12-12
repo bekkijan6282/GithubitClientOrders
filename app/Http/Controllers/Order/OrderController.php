@@ -20,8 +20,12 @@ class OrderController extends Controller
         $clientOrders = $request->clientOrders ?? false;
         $orders = Order::when($request->client_id, function(Builder $builder, int $client_id) {
             $builder->where('client_id', $client_id);
-        })->orderBy('id','DESC')
-                       ->paginate($pageSize);
+        })
+            ->when($request->date, function(Builder $builder, $date) {
+                $builder->where('date',$date);
+            })
+               ->orderBy('id','DESC')
+               ->paginate($pageSize);
 
         return $clientOrders ? ClientOrderResource::collection($orders) : OrderResource::collection($orders);
     }

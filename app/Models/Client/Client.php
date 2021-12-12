@@ -21,11 +21,15 @@ class Client extends Model
 
 public function scopeFilter(Builder $builder, Request $request): Builder
 {
-    return $builder->when($request->search, function(Builder $builder, $search) {
+    return $builder->when($request->search, function(Builder $builder, string $search) {
         $builder
             ->where('first_name','ilike',$search)
             ->orWhere('last_name','ilike',$search)
             ->orWhere('contacts','ilike',$search);
+    })->when($request->date, function(Builder $builder, string $date) {
+        $builder->whereHas('orders', function(Builder $builder) use ($date) {
+            $builder->whereDate('date',$date);
+        });
     });
 }
 
