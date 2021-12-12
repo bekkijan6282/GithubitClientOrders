@@ -11,7 +11,6 @@ class ClientPostRequest extends FormRequest
         return [
             'firstname' => 'required|string',
             'surname' => 'required|string',
-            'contacts' => 'sometimes|json',
         ];
     }
 }

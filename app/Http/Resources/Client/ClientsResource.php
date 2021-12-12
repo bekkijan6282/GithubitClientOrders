@@ -12,7 +12,6 @@ class ClientsResource extends JsonResource
             'id' => $this->id,
             'firstname' => $this->firstname,
             'surname' => $this->surname,
-            'contacts' => json_decode($this->contacts),
         ];
     }
 }

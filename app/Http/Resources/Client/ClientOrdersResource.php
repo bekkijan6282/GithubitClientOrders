@@ -19,7 +19,6 @@ class ClientOrdersResource extends JsonResource
             'id' => $this->id,
             'firstname' => $this->firstname,
             'surname' => $this->surname,
-            'contacts' => json_decode($this->contacts),
             'orders' => ClientOrderResource::collection($this->orders),
         ];
     }

@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Client\Client;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -51,5 +52,17 @@ class ClientController extends Controller
         $client->delete();
 
         return response()->json(['msg' => 'deleted'], JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    public function getUserTransactions(Request $request): JsonResponse
+    {
+        $client_id = $request->client_id ?? null;
+        if($client_id)
+        {
+            $transactions = DB::
+            select("SELECT * FROM order_transactions WHERE order_id IN (SELECT id FROM orders WHERE client_id = ?)",[$client_id]);
+            return response()->json(['data' => $transactions]);
+        }
+        return response()->json(['data' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
     }
 }

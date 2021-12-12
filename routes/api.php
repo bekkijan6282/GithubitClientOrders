@@ -24,3 +24,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('clients', ClientController::class);
 Route::apiResource('orders',OrderController::class);
 Route::apiResource('transactions', TransactionController::class);
+// GET client transactions by client_id
+Route::get('client-transactions',[ClientController::class,'getUserTransactions']);
