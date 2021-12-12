@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\ClientPostRequest;
+use App\Http\Resources\Client\ClientOrdersResource;
 use App\Http\Resources\Client\ClientsResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,9 +16,11 @@ class ClientController extends Controller
     public function index(Request $request): ResourceCollection
     {
         $pageSize = $request->pageSize ?? 15;
+        $withOrders = $request->withOrders ?? false;
+
         $clients = Client::filter($request)->paginate($pageSize);
 
-        return ClientsResource::collection($clients);
+        return $withOrders ? ClientOrdersResource::collection($clients) : ClientsResource::collection($clients);
     }
 
     public function store(ClientPostRequest $request): ClientsResource
@@ -30,7 +33,9 @@ class ClientController extends Controller
 
     public function show(Client $client): ClientsResource
     {
-        return ClientsResource($client);
+        $withOrders = $request->withOrders ?? false;
+
+        return $withOrders ? new ClientOrdersResource($client) : ClientsResource($client);
     }
 
     public function update(ClientPostRequest $request, Client $client): ClientsResource
